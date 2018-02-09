@@ -30,4 +30,4 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 en:
   course:
-    tweet: "Checkout our new course, %{course_name}, %{course_description}, access it here: fakeurl.com\n Available until %{course_date}! "
+    tweet: "Check out our new course, %{course_name}, %{course_description}, access it here: fakeurl.com\n Available until %{course_date}! "

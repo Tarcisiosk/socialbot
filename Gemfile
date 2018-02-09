@@ -20,6 +20,7 @@ gem 'figaro'
 gem 'randumb'
 gem 'pry'
 gem 'rest-client'
+gem 'draper'
 
 group :development, :test do
   gem 'listen', '>= 3.0.5', '< 3.2'

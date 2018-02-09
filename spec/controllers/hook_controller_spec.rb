@@ -1,34 +1,31 @@
 require 'rails_helper'
 
 RSpec.describe HookController, type: :controller do
-  let!(:params) { '{"course_id":"42", "title":"course_name", "logo_url":"course_url", 
-                    "description":"course_description", "time_available":"2018-02-08T23:43:44.698Z"}' }
+  let(:base_params) do
+   JSON.parse('{"course_id":"42", "title":"course_name", "logo_url":"course_url", 
+                "description":"course_description", "time_available":"2018-02-08T23:43:44.698Z"}')
+  end
 
+  let(:additional_params) do
+   JSON.parse('{"format":"json", "controller":"hook", "action":"course_created_callback"}')
+  end
+  
   context 'when receiving callback data' do
     context 'with valid params' do
-      before { Course.destroy_all }
-      it 'creates a course' do
-        RestClient = double
-        post :course_created_callback, format: :json, params: JSON.parse(params)
-        course = Course.first
-        expect(Course.count).to eq 1
-        expect(course.title).to eq 'course_name'
-        expect(course.logo_url).to eq 'course_url'
-        expect(course.description).to eq 'course_description'
-        expect(course.time_available).to eq "2018-02-08T23:43:44.698Z".to_time
+      before { ::Course.destroy_all }
+      it 'calls the course handler' do
+        expect(Handlers::CourseHandler).to receive(:handle_api_data)
+          .with(ActionController::Parameters.new(base_params.merge(additional_params)))
+        post :course_created_callback, format: :json, params: base_params
       end
     end
 
     context 'with invalid params' do
-      before { Course.destroy_all }
-      it 'returns a message' do
-        RestClient = double
-        rest = double
-        rest.stub(:code) { 400 }
-        rest.stub(:body) { nil }
-        RestClient.stub(:post) { rest }
-        post :course_created_callback
-        expect(Course.count).to eq 0
+      before { ::Course.destroy_all }
+      it 'does not raise exception' do
+        expect do
+          post :course_created_callback
+        end.to_not raise_error
       end
     end
   end
