@@ -1,4 +1,4 @@
-# README
+# EADBOX WEBHOOK
 
 This project is a twitter bot that publish something evertytime a course is created.
 
